@@ -14,8 +14,6 @@ Spring Boot를 기반으로 MySQL을 사용하는 간단한 Task 관리 애플�
 6. [AWS 배포](#aws-배포)
 7. [문제 해결](#문제-해결)
 8. [API 엔드포인트](#api-엔드포인트)
-9. [라이선스](#라이선스)
-
 ---
 
 ## 개요
@@ -90,8 +88,8 @@ docker run --name auth-todo-app -p 8080:8080 --link mysql-container:mysql -d aut
 ## AWS 배포
 
 ### 1. EC2 설정
-- Amazon Linux 2023 EC2 인스턴스를 시작합니다.
-- 보안 그룹 설정에서 8080, 3306 포트를 열어주세요.
+- Amazon Linux 2023 EC2 인스턴스를 시작합니다다.
+- 보안 그룹 설정에서 8080, 3306 포트를 열어야 합니다.
 - Docker 설치:
 
 ```bash
@@ -138,7 +136,7 @@ docker ps
 docker exec -it mysql-container mysql -u root -p
 ```
 
-3. `application.properties`에 MySQL IP 및 자격 정보를 올바르게 입력했는지 확인하세요.
+3. `application.properties`에 MySQL IP 및 자격 정보를 올바르게 입력했는지 확인.
 
 ### 애플리케이션 접근 불가
 1. 로그에서 에러 확인:
@@ -147,7 +145,7 @@ docker exec -it mysql-container mysql -u root -p
 docker logs auth-todo-app
 ```
 
-2. AWS EC2 보안 그룹이 8080, 3306 포트를 허용하는지 확인하세요.
+2. AWS EC2 보안 그룹이 8080, 3306 포트를 허용하는지 확인.
 
 ### 네트워크 문제
 1. Docker 네트워크 설정 확인:
