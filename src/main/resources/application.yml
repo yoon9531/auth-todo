@@ -2,7 +2,7 @@ spring:
   application:
     name: auth-todo
   datasource:
-    url: jdbc:mysql://ec2-43-200-163-92.ap-northeast-2.compute.amazonaws.com:3306/task_manager
+    url: jdbc:mysql://localhost:3306/task_manager
     username: root
     password: 1234
   jpa:

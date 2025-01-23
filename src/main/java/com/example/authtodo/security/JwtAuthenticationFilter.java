@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.info("Request URI: {}", uri);
 
         // /auth/signup, /auth/login 요청은 필터링하지 않음
-        if (uri.equals("/auth/signup") || uri.equals("/auth/login") || uri.equals("/")) {
+        if (uri.equals("/auth/signup") || uri.equals("/auth/login") || uri.equals("/swagger-ui/index.html")) {
             filterChain.doFilter(request, response);
             return;
         }
