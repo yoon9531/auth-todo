@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: auth-todo
+  datasource:
+    url: jdbc:mysql://ec2-43-200-163-92.ap-northeast-2.compute.amazonaws.com:3306/task_manager
+    username: root
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+jwt:
+  secret-key: my-secret-keymy-secret-keymy-secret-keymy-secret-keymy-secret-keymy-secret-key
+  access-token-validity: 86400
+  refresh-token-validity: 2592000
