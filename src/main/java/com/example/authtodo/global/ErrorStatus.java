@@ -27,7 +27,10 @@ public enum ErrorStatus implements BaseErrorCode {
     TASK_NOT_AUTHORIZED_YET(HttpStatus.FORBIDDEN, "TASK403", "본인의 할일이 아닙니다."),
     TASK_NOT_AUTHORIZED_NOT_COMPLETED(HttpStatus.FORBIDDEN, "TASK403", "본인의 완료되지 않은 할일이 아닙니다."),
     TASK_NOT_AUTHORIZED_COMPLETED_YET(HttpStatus.FORBIDDEN, "TASK403", "본인의 완료된 할일이 아닙니다."),
-    TASK_NOT_AUTHORIZED_NOT_COMPLETED_YET(HttpStatus.FORBIDDEN, "TASK403", "본인의 완료되지 않은 할일이 아닙니다.");
+    TASK_NOT_AUTHORIZED_NOT_COMPLETED_YET(HttpStatus.FORBIDDEN, "TASK403", "본인의 완료되지 않은 할일이 아닙니다."),
+
+    INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "LOGIN400", "유효하지 않은 Refresh Token 입니다."),
+    REFRESH_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "LOGIN400", "만료된 Refresh Token 입니다.");
 
 
     private final HttpStatus httpStatus;

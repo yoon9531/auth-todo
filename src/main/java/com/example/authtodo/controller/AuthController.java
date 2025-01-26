@@ -3,6 +3,7 @@ package com.example.authtodo.controller;
 import com.example.authtodo.entity.JwtResponse;
 import com.example.authtodo.entity.dto.RegisterRequestDTO;
 import com.example.authtodo.entity.dto.UserCreateDTO;
+import com.example.authtodo.global.ApiResponse;
 import com.example.authtodo.security.JwtUtil;
 import com.example.authtodo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +37,13 @@ public class AuthController {
         JwtResponse jwtResponse = userService.login(user.getUsername(), user.getPassword());
 
         return ResponseEntity.ok(jwtResponse);
+    }
+
+    @Operation(summary = "Refresh AccessToken", description = "Use RefreshToken to get a new AccessToken")
+    @PostMapping("/refresh")
+    public ApiResponse<JwtResponse> refresh(@RequestBody String refreshToken) {
+        JwtResponse jwtResponse = userService.refresh(refreshToken);
+        return ApiResponse.success(jwtResponse);
     }
 
     @Data

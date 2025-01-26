@@ -1,4 +1,4 @@
-package com.example.authtodo.exception;
+package com.example.authtodo.exception.handler;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 

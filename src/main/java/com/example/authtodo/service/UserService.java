@@ -8,4 +8,5 @@ public interface UserService {
     User registerUser(String username, String password);
 
     JwtResponse login(String username, String password);
+    JwtResponse refresh(String refreshToken);
 }

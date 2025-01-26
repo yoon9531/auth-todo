@@ -3,6 +3,9 @@ package com.example.authtodo.service;
 import com.example.authtodo.entity.Task;
 import com.example.authtodo.entity.User;
 import com.example.authtodo.entity.dto.TaskCreateDTO;
+import com.example.authtodo.exception.handler.TaskExceptionHandler;
+import com.example.authtodo.exception.handler.UserExceptionHandler;
+import com.example.authtodo.global.ErrorStatus;
 import com.example.authtodo.repository.TaskRepository;
 import com.example.authtodo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +42,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = findTaskorThrow(taskId);
 
         if (!task.getUser().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("Task not found");
+            throw new TaskExceptionHandler(ErrorStatus.TASK_NOT_AUTHORIZED);
         }
 
         task.setTitle(title);
@@ -54,7 +57,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = findTaskorThrow(taskId);
 
         if (!task.getUser().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("Task not found");
+            throw new TaskExceptionHandler(ErrorStatus.TASK_NOT_AUTHORIZED);
         }
 
         taskRepository.deleteById(taskId);
@@ -82,7 +85,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = findTaskorThrow(taskId);
 
         if (!task.getUser().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("Task not found");
+            throw new TaskExceptionHandler(ErrorStatus.TASK_NOT_AUTHORIZED);
         }
 
         taskRepository.findByIdAndUserId(task.getId(), user.getId());
@@ -92,11 +95,11 @@ public class TaskServiceImpl implements TaskService {
 
     private User findUserOrThrow(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new UserExceptionHandler(ErrorStatus.USER_NOT_FOUND));
     }
 
     private Task findTaskorThrow(Long taskId) {
         return taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+                .orElseThrow(() -> new TaskExceptionHandler(ErrorStatus.TASK_NOT_FOUND));
     }
 }
