@@ -1,5 +1,6 @@
 package com.example.authtodo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -30,6 +31,7 @@ public class User {
 
     @Column(nullable = false)
     @NotNull
+    @JsonIgnore
     @Size(min = 8, max = 100)
     private String password;
 

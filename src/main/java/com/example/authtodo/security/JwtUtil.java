@@ -79,14 +79,6 @@ public class JwtUtil {
     }
 
     public String validateTokenAndGetUsername(String token) {
-        String subject = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-
-        log.info("subject: {}", subject);
 
         return Jwts.parserBuilder()
                 .setSigningKey(key)
