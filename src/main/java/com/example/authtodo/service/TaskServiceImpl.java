@@ -7,11 +7,13 @@ import com.example.authtodo.repository.TaskRepository;
 import com.example.authtodo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
@@ -20,11 +22,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task createTask(String username, TaskCreateDTO taskCreateDTO) {
 
-        if (!isUserExist(username)) {
-            throw new IllegalArgumentException("User not found");
-        }
-
-        User user = userRepository.findByUsername(username).get();
+        User user = findUserOrThrow(username);
 
         Task task = Task.builder()
                 .title(taskCreateDTO.getTitle())
@@ -37,16 +35,25 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task updateTask(String username, Long taskId, String title, String description) {
-        return null;
+        User user = findUserOrThrow(username);
+        Task task = findTaskorThrow(taskId);
+
+        if (!task.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("Task not found");
+        }
+
+        task.setTitle(title);
+        task.setDescription(description);
+
+        return taskRepository.save(task);
     }
 
     @Override
     public void deleteTask(String username, Long taskId) {
-        if (!isUserExist(username)) {
-            throw new IllegalArgumentException("User not found");
-        }
+        User user = findUserOrThrow(username);
+        Task task = findTaskorThrow(taskId);
 
-        if (!isTaskExist(taskId)) {
+        if (!task.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("Task not found");
         }
 
@@ -55,9 +62,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void deleteAllTasks(String username) {
-        if (!isUserExist(username)) {
-            throw new IllegalArgumentException("User not found");
-        }
+        findUserOrThrow(username);
 
         taskRepository.deleteAllByUserUsername(username);
     }
@@ -65,34 +70,33 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> getAllTasks(String username) {
 
-        if (!isUserExist(username)) {
-            throw new IllegalArgumentException("User not found");
-        }
+        User user = findUserOrThrow(username);
 
-        return taskRepository.findByUserId(userRepository.findByUsername(username).get().getId());
+        return taskRepository.findByUserId(user.getId());
     }
 
     @Override
     public Task getTaskByUserId(String username, Long taskId) {
 
-        if (!isUserExist(username)) {
-            throw new IllegalArgumentException("User not found");
-        }
+        User user = findUserOrThrow(username);
+        Task task = findTaskorThrow(taskId);
 
-        if (!isTaskExist(taskId)) {
+        if (!task.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("Task not found");
         }
 
-        Long userId = userRepository.findByUsername(username).get().getId();
+        taskRepository.findByIdAndUserId(task.getId(), user.getId());
 
-        return taskRepository.findByIdAndUserId(taskId, userId).get();
+        return task;
     }
 
-    private boolean isUserExist(String username) {
-        return userRepository.findByUsername(username).isPresent();
+    private User findUserOrThrow(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
-    private boolean isTaskExist(Long taskId) {
-        return taskRepository.existsById(taskId);
+    private Task findTaskorThrow(Long taskId) {
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
     }
 }

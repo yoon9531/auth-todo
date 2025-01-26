@@ -1,5 +1,6 @@
 package com.example.authtodo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -34,5 +35,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
+    @JsonIgnoreProperties({"user"})
+    @ToString.Exclude
     private List<Task> tasks = new ArrayList<>();
 }
