@@ -1,12 +1,10 @@
 package com.example.authtodo.controller;
 
 import com.example.authtodo.entity.Task;
-import com.example.authtodo.entity.User;
-import com.example.authtodo.entity.dto.TaskCreateDTO;
+import com.example.authtodo.entity.converter.TaskConverter;
 import com.example.authtodo.entity.dto.TaskRequestDTO;
 import com.example.authtodo.entity.dto.TaskResponseDTO;
 import com.example.authtodo.entity.dto.UserResponseDTO;
-import com.example.authtodo.global.ApiResponse;
 import com.example.authtodo.security.JwtUtil;
 import com.example.authtodo.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +30,7 @@ public class TaskController {
         List<Task> allTasks = taskService.getAllTasks(username);
 
         List<TaskResponseDTO> result = allTasks.stream()
-                .map(task -> TaskResponseDTO.builder()
-                        .id(task.getId())
-                        .title(task.getTitle())
-                        .description(task.getDescription())
-                        .user(new UserResponseDTO(task.getUser().getId(), task.getUser().getUsername()))
-                        .build())
+                .map(TaskConverter::toTaskResponseDTO)
                 .toList();
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -45,17 +38,12 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<TaskResponseDTO> createTask(@RequestHeader("Authorization") String token,
-                                                                   @RequestBody TaskCreateDTO taskCreateDTO) {
+                                                                   @RequestBody TaskRequestDTO taskRequestDTO) {
         String username = extractUsername(token);
 
-        Task task = taskService.createTask(username, taskCreateDTO);
+        Task task = taskService.createTask(username, taskRequestDTO);
 
-        TaskResponseDTO taskResponseDTO = TaskResponseDTO.builder()
-                .id(task.getId())
-                .title(task.getTitle())
-                .description(task.getDescription())
-                .user(new UserResponseDTO(task.getUser().getId(), task.getUser().getUsername()))
-                .build();
+        TaskResponseDTO taskResponseDTO = TaskConverter.toTaskResponseDTO(task);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(taskResponseDTO);
     }
@@ -67,14 +55,9 @@ public class TaskController {
 
         String username = extractUsername(token);
 
-        Task updatedTask = taskService.updateTask(username, taskId, taskRequestDTO.getTitle(), taskRequestDTO.getDescription());
+        Task updatedTask = taskService.updateTask(username, taskId, taskRequestDTO);
 
-        TaskResponseDTO taskResponseDTO = TaskResponseDTO.builder()
-                .id(updatedTask.getId())
-                .title(updatedTask.getTitle())
-                .description(updatedTask.getDescription())
-                .user(new UserResponseDTO(updatedTask.getUser().getId(), updatedTask.getUser().getUsername()))
-                .build();
+        TaskResponseDTO taskResponseDTO = TaskConverter.toTaskResponseDTO(updatedTask);
 
         return ResponseEntity.status(HttpStatus.OK).body(taskResponseDTO);
     }

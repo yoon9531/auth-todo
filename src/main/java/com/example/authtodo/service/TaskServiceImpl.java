@@ -2,7 +2,7 @@ package com.example.authtodo.service;
 
 import com.example.authtodo.entity.Task;
 import com.example.authtodo.entity.User;
-import com.example.authtodo.entity.dto.TaskCreateDTO;
+import com.example.authtodo.entity.dto.TaskRequestDTO;
 import com.example.authtodo.exception.handler.TaskExceptionHandler;
 import com.example.authtodo.exception.handler.UserExceptionHandler;
 import com.example.authtodo.global.ErrorStatus;
@@ -23,13 +23,13 @@ public class TaskServiceImpl implements TaskService {
     private final UserRepository userRepository;
 
     @Override
-    public Task createTask(String username, TaskCreateDTO taskCreateDTO) {
+    public Task createTask(String username, TaskRequestDTO taskRequestDTO) {
 
         User user = findUserOrThrow(username);
 
         Task task = Task.builder()
-                .title(taskCreateDTO.getTitle())
-                .description(taskCreateDTO.getDescription())
+                .title(taskRequestDTO.getTitle())
+                .description(taskRequestDTO.getDescription())
                 .user(user)
                 .build();
 
@@ -37,7 +37,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task updateTask(String username, Long taskId, String title, String description) {
+    public Task updateTask(String username, Long taskId, TaskRequestDTO taskRequestDTO) {
         User user = findUserOrThrow(username);
         Task task = findTaskorThrow(taskId);
 
@@ -45,8 +45,8 @@ public class TaskServiceImpl implements TaskService {
             throw new TaskExceptionHandler(ErrorStatus.TASK_NOT_AUTHORIZED);
         }
 
-        task.setTitle(title);
-        task.setDescription(description);
+        task.setTitle(taskRequestDTO.getTitle());
+        task.setDescription(taskRequestDTO.getDescription());
 
         return taskRepository.save(task);
     }
