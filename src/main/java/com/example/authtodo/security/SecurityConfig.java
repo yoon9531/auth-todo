@@ -39,8 +39,8 @@ public class SecurityConfig {
 //                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable);
-
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .requiresChannel(channel -> channel.anyRequest().requiresSecure());
 
         return http.build();
 
