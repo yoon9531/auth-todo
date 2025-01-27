@@ -28,7 +28,7 @@ public class TaskController {
 
     @GetMapping
     public ResponseEntity<List<TaskResponseDTO>> getTasks(@RequestHeader("Authorization") String token) {
-        String username = jwtUtil.validateTokenAndGetUsername(token.replace("Bearer ", ""));
+        String username = extractUsername(token);
         List<Task> allTasks = taskService.getAllTasks(username);
 
         List<TaskResponseDTO> result = allTasks.stream()
@@ -46,7 +46,7 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<TaskResponseDTO> createTask(@RequestHeader("Authorization") String token,
                                                                    @RequestBody TaskCreateDTO taskCreateDTO) {
-        String username = jwtUtil.validateTokenAndGetUsername(token.replace("Bearer ", ""));
+        String username = extractUsername(token);
 
         Task task = taskService.createTask(username, taskCreateDTO);
 
@@ -65,7 +65,7 @@ public class TaskController {
                                                       @PathVariable Long taskId,
                                                       @RequestBody TaskRequestDTO taskRequestDTO) {
 
-        String username = jwtUtil.validateTokenAndGetUsername(token.replace("Bearer ", ""));
+        String username = extractUsername(token);
 
         Task updatedTask = taskService.updateTask(username, taskId, taskRequestDTO.getTitle(), taskRequestDTO.getDescription());
 
@@ -82,7 +82,7 @@ public class TaskController {
     @DeleteMapping("/{taskId}")
     public ResponseEntity<String> deleteTask(@RequestHeader("Authorization") String token,
                                                         @PathVariable Long taskId) {
-        String username = jwtUtil.validateTokenAndGetUsername(token.replace("Bearer ", ""));
+        String username = extractUsername(token);
 
         taskService.deleteTask(username, taskId);
 
@@ -91,11 +91,15 @@ public class TaskController {
 
     @DeleteMapping
     public ResponseEntity<String> deleteAllTasks(@RequestHeader("Authorization") String token) {
-        String username = jwtUtil.validateTokenAndGetUsername(token.replace("Bearer ", ""));
+        String username = extractUsername(token);
 
         taskService.deleteAllTasks(username);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("All tasks deleted successfully");
+    }
+
+    private String extractUsername(String token) {
+        return jwtUtil.validateTokenAndGetUsername(token.replace("Bearer ", ""));
     }
 
 }
