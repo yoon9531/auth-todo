@@ -2,9 +2,9 @@ spring:
   application:
     name: auth-todo
   datasource:
-    url: jdbc:mysql://localhost:3306/task_manager
-    username: root
-    password: 1234
+    url: jdbc:mysql://database-1.czs2e0qaqyw7.ap-northeast-2.rds.amazonaws.com:3306/test
+    username: admin
+    password: tjddbs9844
   jpa:
     hibernate:
       ddl-auto: update
@@ -12,7 +12,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-
+        default_batch_fetch_size: 100
 jwt:
   secret-key: my-secret-keymy-secret-keymy-secret-keymy-secret-keymy-secret-keymy-secret-key
   access-token-validity: 86400
